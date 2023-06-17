@@ -1,0 +1,43 @@
+<?php
+include("Header.php");
+if(isset($_POST['submit']))
+{
+	$mobileno = $_POST['mobileno'];
+	$name = $_POST['name'];	
+	if($c->isUnique("select * from admin where mobileno='$mobileno'"))
+	{
+		$query = "update admin set name='$name',mobileno='$mobileno' where email='".$_SESSION['AdminData']['email']."'";
+		mysqli_query($c->con,$query) or die("Error : ".mysqli_error());
+		echo '<div class="alert alert-success alert-dismissible">
+			  <button type="button" class="close" data-dismiss="alert">&times;</button>
+			  <strong>Success!</strong> Your Profile Change Successful
+			</div>';
+	}
+	else
+	{
+		echo '<div class="alert alert-danger alert-dismissible">
+			  <button type="button" class="close" data-dismiss="alert">&times;</button>
+			  <strong>Error!</strong> Mobile No Already Registerd!!!
+			</div>';
+	}
+}
+$query = "SELECT * FROM admin where email='".$_SESSION['AdminData']['email']."'";
+$res = mysqli_query($c->con,$query) or die("Error : ".mysqli_error($c->con));
+$data = mysqli_fetch_array($res);
+
+?>  
+  <h3>Change Profile</h3>
+  <form action="" method="post">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Mobile No</label>
+    <input type="text" name="mobileno" value="<?php echo $data[4]; ?>" class="form-control"   placeholder="Enter Mobile No">    
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Your Name</label>
+    <input type="text" name="name" value="<?php echo $data[3]; ?>"  class="form-control" id="exampleInputPassword1" placeholder="Your Name">
+  </div> 
+  <button type="submit" name="submit" class="btn btn-primary">Change Profile</button>
+</form>
+<?php
+include("Footer.php");
+?>  
